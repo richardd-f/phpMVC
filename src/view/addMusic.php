@@ -49,7 +49,6 @@ $music_list = [
                         <th class="p-4 font-semibold text-sm uppercase">Title</th>
                         <th class="p-4 font-semibold text-sm uppercase">Duration</th>
                         <th class="p-4 font-semibold text-sm uppercase">Published</th>
-                        <th class="p-4 font-semibold text-sm uppercase">Singer</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -58,7 +57,6 @@ $music_list = [
                             <td class="p-4 text-gray-700"><?php echo htmlspecialchars($music['title']); ?></td>
                             <td class="p-4 text-gray-700"><?php echo htmlspecialchars($music['duration']); ?></td>
                             <td class="p-4 text-gray-700"><?php echo htmlspecialchars($music['published']); ?></td>
-                            <td class="p-4 text-gray-700"><?php echo htmlspecialchars($music['singer']); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
