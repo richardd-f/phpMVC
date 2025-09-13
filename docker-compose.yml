@@ -36,7 +36,6 @@ services:
     environment:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: rootpass
-      PMA_ABSOLUTE_URI: http://db:8080/
       PHPMYADMIN_ALLOW_ARBITRARY_SERVER: 1
     ports:
       - "8080:80"
