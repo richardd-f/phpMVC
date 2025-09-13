@@ -4,26 +4,22 @@ $music_list = [
     [
         'title' => 'Bohemian Rhapsody',
         'duration' => '5:55',
-        'published' => '1975-10-31',
-        'singer' => 'Queen'
+        'published' => '1975-10-31'
     ],
     [
         'title' => 'Smells Like Teen Spirit',
         'duration' => '5:01',
-        'published' => '1991-09-10',
-        'singer' => 'Nirvana'
+        'published' => '1991-09-10'
     ],
     [
         'title' => 'Hotel California',
         'duration' => '6:30',
-        'published' => '1977-02-22',
-        'singer' => 'Eagles'
+        'published' => '1977-02-22'
     ],
     [
         'title' => 'Stairway to Heaven',
         'duration' => '8:02',
-        'published' => '1971-11-08',
-        'singer' => 'Led Zeppelin'
+        'published' => '1971-11-08'
     ]
 ];
 ?>
@@ -36,27 +32,48 @@ $music_list = [
     <title>List Music</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 font-sans p-4 sm:p-6 md:p-8">
+<body class="bg-gray-100 font-sans">
+    <?php require_once("../nav.php")?>
 
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-5xl mx-auto p-4 sm:p-6 md:p-8">
 
-        <h1 class="text-3xl font-bold text-gray-800 mb-6">🎵 List Music</h1>
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">List Music</h1>
 
-        <div class="shadow-md rounded-lg overflow-hidden">
-            <table class="w-full text-left bg-white">
+        <!-- Responsive wrapper for horizontal scroll -->
+        <div class="shadow-md rounded-lg overflow-hidden overflow-x-auto">
+            <table class="min-w-full text-left bg-white">
                 <thead class="bg-blue-500 text-white">
                     <tr>
                         <th class="p-4 font-semibold text-sm uppercase">Title</th>
                         <th class="p-4 font-semibold text-sm uppercase">Duration</th>
                         <th class="p-4 font-semibold text-sm uppercase">Published</th>
+                        <th class="p-4 font-semibold text-sm uppercase text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                    <?php foreach ($music_list as $music): ?>
+                    <?php foreach ($music_list as $index => $music): ?>
                         <tr class="hover:bg-gray-50">
                             <td class="p-4 text-gray-700"><?php echo htmlspecialchars($music['title']); ?></td>
                             <td class="p-4 text-gray-700"><?php echo htmlspecialchars($music['duration']); ?></td>
                             <td class="p-4 text-gray-700"><?php echo htmlspecialchars($music['published']); ?></td>
+                            <td class="p-4">
+                                <div class="flex justify-center items-center gap-2">
+                                    <!-- Edit Button -->
+                                    <a href="?action=edit&id=<?php echo $index; ?>" 
+                                       class="inline-flex items-center justify-center bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.75 20.902l-4.5 1.125 1.125-4.5L16.862 4.487z" />
+                                        </svg>
+                                    </a>
+                                    <!-- Delete Button -->
+                                    <a href="?action=delete&id=<?php echo $index; ?>" 
+                                       class="inline-flex items-center justify-center bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -66,7 +83,7 @@ $music_list = [
         <hr class="my-8">
 
         <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Add New Music (Display Only)</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Add New Music</h2>
             <form action="" method="POST" class="space-y-4">
                 <div>
                     <label for="title" class="block text-sm font-medium text-gray-700">Title</label>

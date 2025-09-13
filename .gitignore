@@ -1,0 +1,3 @@
+# Ignore MySQL runtime data
+mysql_data/*
+!mysql_data/*.cnf

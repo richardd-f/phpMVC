@@ -43,19 +43,21 @@ $assignments = [
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 font-sans p-4 sm:p-6 md:p-8">
+<body class="bg-gray-100 font-sans">
+    <?php require_once("../nav.php")?>
 
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-5xl mx-auto p-4 sm:p-6 md:p-8">
 
-        <h1 class="text-3xl font-bold text-gray-800 mb-6">🤝 Assign Music to Singer</h1>
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Assign Music to Singer</h1>
 
         <!-- Assignments Table -->
-        <div class="shadow-md rounded-lg overflow-hidden">
-            <table class="w-full text-left bg-white">
+        <div class="overflow-x-auto shadow-md rounded-lg">
+            <table class="min-w-full text-left bg-white">
                 <thead class="bg-green-500 text-white">
                     <tr>
                         <th class="p-4 font-semibold text-sm uppercase">Music Title</th>
                         <th class="p-4 font-semibold text-sm uppercase">Singer Name</th>
+                        <th class="p-4 font-semibold text-sm uppercase text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -63,6 +65,20 @@ $assignments = [
                         <tr class="hover:bg-gray-50">
                             <td class="p-4 text-gray-700"><?php echo htmlspecialchars($assignment['music_title']); ?></td>
                             <td class="p-4 text-gray-700"><?php echo htmlspecialchars($assignment['singer_name']); ?></td>
+                            <td class="p-4 text-center flex justify-center space-x-2">
+                                <!-- Edit Button -->
+                                <button class="bg-blue-500 p-2 rounded-md hover:bg-blue-600 flex items-center justify-center text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.75 20.902l-4.5 1.125 1.125-4.5L16.862 4.487z" />
+                                    </svg>
+                                </button>
+                                <!-- Delete Button -->
+                                <button class="bg-red-500 p-2 rounded-md hover:bg-red-600 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -77,7 +93,7 @@ $assignments = [
             <form action="" method="POST" class="space-y-4">
                 <div>
                     <label for="music" class="block text-sm font-medium text-gray-700">Select Music</label>
-                    <select id="music" name="music" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md border">
+                    <select id="music" name="music" class="mt-1 block w-full pl-3 pr-10 py-2 border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md border">
                         <option>-- Choose a song --</option>
                         <?php foreach ($music_list as $music): ?>
                             <option value="<?php echo htmlspecialchars($music['title']); ?>">
@@ -89,7 +105,7 @@ $assignments = [
 
                 <div>
                     <label for="singer" class="block text-sm font-medium text-gray-700">Select Singer</label>
-                    <select id="singer" name="singer" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md border">
+                    <select id="singer" name="singer" class="mt-1 block w-full pl-3 pr-10 py-2 border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md border">
                         <option>-- Choose a singer --</option>
                         <?php foreach ($singer_list as $singer): ?>
                             <option value="<?php echo htmlspecialchars($singer['name']); ?>">
