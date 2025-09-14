@@ -8,27 +8,145 @@ class Music {
         $this->conn = Database::getInstance();
     }
 
-    public function addMusic($title, $duration, $published) {
-        $sql = "INSERT INTO Music (title, duration, published) VALUES (:title, :duration, :published)";
-        $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([
-            ':title' => $title,
-            ':duration' => $duration,
-            ':published' => $published
-        ]);
+    // CRUD operations for Music
+    // Create Music
+    public function addMusic($title, $duration, $publishDate) {
+            try {
+            $sql = "INSERT INTO Music (title, duration, publishDate) VALUES (:title, :duration, :publishDate)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([
+                ':title' => $title,
+                ':duration' => $duration,
+                ':publishDate' => $publishDate
+            ]);
+            return [
+                "success" => true,
+                "err" => null
+            ];
+        } catch (PDOException $e) {
+            return [
+                "success" => false,
+                "err" => $e->getMessage()
+            ];
+        }
     }
 
+    // Assign Singer to Music
     public function assignSinger($music_id, $singer_id) {
-        $sql = "UPDATE Music SET singer_id = :singer_id WHERE music_id = :music_id";
-        $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([
-            ':singer_id' => $singer_id,
-            ':music_id' => $music_id
-        ]);
+        try {
+            $sql = "UPDATE Music SET singer_id = :singer_id WHERE music_id = :music_id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([
+                ':singer_id' => $singer_id,
+                ':music_id' => $music_id
+            ]);
+
+            return [
+                "success" => true,
+                "err" => null
+            ];
+        } catch (PDOException $e) {
+            return [
+                "success" => false,
+                "err" => $e->getMessage()
+            ];
+        }
     }
 
+    // Read Music
     public function getAllMusic() {
-        $sql = "SELECT * FROM Music";
-        return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+            try {
+            $sql = "SELECT * FROM Music";
+            $stmt = $this->conn->query($sql);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return [
+                "success" => true,
+                "data" => $data,
+                "err" => null
+            ];
+        } catch (PDOException $e) {
+            return [
+                "success" => false,
+                "data" => null,
+                "err" => $e->getMessage()
+            ];
+        }
     }
+
+    public function getMusicById($music_id) {
+        try {
+        $sql = "SELECT * FROM Music WHERE music_id = :music_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':music_id' => $music_id]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return [
+                "success" => true,
+                "data" => $data,
+                "err" => null
+            ];
+        } catch (PDOException $e) {
+            return [
+                "success" => false,
+                "data" => null,
+                "err" => $e->getMessage()
+            ];
+        }
+    }
+
+    // Update Music
+    public function updateMusic($music_id, $title, $duration, $publishDate, $singer_id = null) {
+        try {
+            $sql = "UPDATE Music 
+                    SET title = :title, duration = :duration, publishDate = :publishDate, singer_id = :singer_id
+                    WHERE music_id = :music_id";
+
+            $stmt = $this->conn->prepare($sql);
+            $success = $stmt->execute([
+                ':title' => $title,
+                ':duration' => $duration,
+                ':publishDate' => $publishDate,
+                ':singer_id' => $singer_id,
+                ':music_id' => $music_id
+            ]);
+
+            return [
+                "success" => $success,
+                "data" => $success ? $this->getMusicById($music_id) : null,
+                "err" => $success ? null : "Failed to update music"
+            ];
+        } catch (PDOException $e) {
+            return [
+                "success" => false,
+                "data" => null,
+                "err" => $e->getMessage()
+            ];
+        }
+    }
+
+
+
+    // Delete Music
+    public function deleteMusic($music_id) {
+        try {
+            $sql = "DELETE FROM Music WHERE music_id = :music_id";
+            $stmt = $this->conn->prepare($sql);
+            $success = $stmt->execute([':music_id' => $music_id]);
+
+            return [
+                "success" => $success,
+                "data" => null, // delete biasanya ga return data
+                "err" => $success ? null : "Failed to delete music"
+            ];
+        } catch (PDOException $e) {
+            return [
+                "success" => false,
+                "data" => null,
+                "err" => $e->getMessage()
+            ];
+        }
+    }
+
+    
 }
