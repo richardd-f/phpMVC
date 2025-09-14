@@ -3,7 +3,6 @@
 require_once("../../model/Music.php");
 $music = new Music();
 $music_list = $music->getAllMusic();
-
 ?>
 
 <!DOCTYPE html>

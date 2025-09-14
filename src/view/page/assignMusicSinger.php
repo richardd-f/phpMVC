@@ -1,22 +1,4 @@
 <?php
-// Dummy database for Music
-$music_list = [
-    ['title' => 'Bohemian Rhapsody'],
-    ['title' => 'Smells Like Teen Spirit'],
-    ['title' => 'Hotel California'],
-    ['title' => 'Stairway to Heaven'],
-    ['title' => 'Like a Rolling Stone'],
-];
-
-// Dummy database for Singers
-$singer_list = [
-    ['name' => 'Freddie Mercury'],
-    ['name' => 'Kurt Cobain'],
-    ['name' => 'Don Henley'],
-    ['name' => 'Robert Plant'],
-    ['name' => 'Bob Dylan'],
-];
-
 // Dummy database for existing assignments
 $assignments = [
     [
@@ -32,6 +14,18 @@ $assignments = [
         'singer_name' => 'Don Henley'
     ],
 ];
+
+require_once("../../model/Music.php");
+require_once("../../model/Singer.php");
+
+$music = new Music();
+$singer = new Singer();
+
+$music_list = $music->getAllMusic();
+$singer_list = $singer->getAllSingers();
+
+// perlu getMusicWithoutSinger()
+
 ?>
 
 <!DOCTYPE html>
