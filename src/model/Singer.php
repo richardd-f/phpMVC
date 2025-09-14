@@ -38,7 +38,7 @@ class Singer {
         try {
             $sql = "UPDATE Singer 
                     SET name = :name, birthdate = :birthdate, genre = :genre, weight = :weight, height = :height 
-                    WHERE id = :id";
+                    WHERE singer_id = :id";
             $stmt = $this->conn->prepare($sql);
 
             $stmt->execute([
@@ -64,20 +64,20 @@ class Singer {
 
     function deleteSinger($singerId) {
         try {
-            $sql = "DELETE FROM singer WHERE id = :id";
-            $stmt = $conn->prepare($sql);
+            $sql = "DELETE FROM singer WHERE singer_id = :id";
+            $stmt = $this->conn->prepare($sql);
 
             $stmt->bindParam(":id", $singerId, PDO::PARAM_INT);
 
             $stmt->execute();
             return [
-                success => true,
-                err => null
+                "success" => true,
+                "err" => null
             ] ;
         } catch (PDOException $e) {
             return [
-                success => false,
-                err => $e->getMessage()
+                "success" => false,
+                "err" => $e->getMessage()
             ];
         }
     }
@@ -85,5 +85,25 @@ class Singer {
     public function getAllSingers() {
         $sql = "SELECT * FROM Singer";
         return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getSingerById($id){
+        try{
+            $sql = "SELECT * FROM Singer WHERE singer_id= :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+            $stmt->execute();
+            return [
+                "success" => true,
+                "data" => $stmt->fetch(PDO::FETCH_ASSOC),
+                "err" => null
+            ];
+        } catch(PDOException $e){
+            return [
+                "success" => false,
+                "data" => null,
+                "err" => $e->getMessage()
+            ];
+        }
     }
 }
