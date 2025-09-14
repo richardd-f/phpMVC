@@ -1,3 +1,16 @@
+<?php 
+$msgIsError = null;
+$msg = "";
+
+if(isset($_GET["err"])){
+  $msgIsError = true;
+  $msg = urldecode($_GET["err"]);
+} else if(isset($_GET["msg"])){
+  $msgIsError = false;
+  $msg = urldecode($_GET["msg"]); 
+}
+?>
+
 <!-- Navbar -->
 <nav class="bg-blue-600 shadow-lg">
   <div class="max-w-7xl mx-auto px-4">
@@ -26,3 +39,21 @@
     </div>
   </div>
 </nav>
+
+<?php if ($msgIsError !== null): ?>
+  <div id="notification" class="max-w-7xl mx-auto mt-4 px-4">
+    <div  class="relative p-4 rounded-lg shadow-md flex items-start justify-between 
+                <?= $msgIsError ? 'bg-red-100 text-red-700 border border-red-300' : 'bg-green-100 text-green-700 border border-green-300'; ?>"
+    >
+      
+      <!-- Message -->
+      <span><?php echo htmlspecialchars($msg); ?></span>
+      
+      <!-- Close Button -->
+      <button onclick="document.getElementById('notification').style.display='none'" 
+              class="ml-4 text-xl font-bold leading-none text-gray-500 hover:text-gray-700">
+        &times;
+      </button>
+    </div>
+  </div>
+<?php endif; ?>
