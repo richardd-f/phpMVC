@@ -1,33 +1,9 @@
 <?php
-// A simple array to act as our dummy database
-$music_list = [
-    [
-        'title' => 'Bohemian Rhapsody',
-        'duration' => '5:55',
-        'published' => '1975-10-31'
-    ],
-    [
-        'title' => 'Smells Like Teen Spirit',
-        'duration' => '5:01',
-        'published' => '1991-09-10'
-    ],
-    [
-        'title' => 'Hotel California',
-        'duration' => '6:30',
-        'published' => '1977-02-22'
-    ],
-    [
-        'title' => 'Stairway to Heaven',
-        'duration' => '8:02',
-        'published' => '1971-11-08'
-    ]
-];
 
 require_once("../../model/Music.php");
 $music = new Music();
-$music_list2 = $music->getAllMusic();
-var_dump($music_list2);
-die();
+$music_list = $music->getAllMusic();
+
 ?>
 
 <!DOCTYPE html>
@@ -40,20 +16,18 @@ die();
     </head>
     <body class="bg-gray-100 font-sans">
         <?php require_once("../nav.php")?>
-        <?= var_dump($music_list2) ?>
 
     <div class="max-w-5xl mx-auto p-4 sm:p-6 md:p-8">
 
         <h1 class="text-3xl font-bold text-gray-800 mb-6">List Music</h1>
 
-        <!-- Responsive wrapper for horizontal scroll -->
         <div class="shadow-md rounded-lg overflow-hidden overflow-x-auto">
             <table class="min-w-full text-left bg-white">
                 <thead class="bg-blue-500 text-white">
                     <tr>
                         <th class="p-4 font-semibold text-sm uppercase">Title</th>
                         <th class="p-4 font-semibold text-sm uppercase">Duration</th>
-                        <th class="p-4 font-semibold text-sm uppercase">Published</th>
+                        <th class="p-4 font-semibold text-sm uppercase">publishDate</th>
                         <th class="p-4 font-semibold text-sm uppercase text-center">Actions</th>
                     </tr>
                 </thead>
@@ -62,7 +36,7 @@ die();
                         <tr class="hover:bg-gray-50">
                             <td class="p-4 text-gray-700"><?php echo htmlspecialchars($music['title']); ?></td>
                             <td class="p-4 text-gray-700"><?php echo htmlspecialchars($music['duration']); ?></td>
-                            <td class="p-4 text-gray-700"><?php echo htmlspecialchars($music['published']); ?></td>
+                            <td class="p-4 text-gray-700"><?php echo htmlspecialchars($music['publishDate']); ?></td>
                             <td class="p-4">
                                 <div class="flex justify-center items-center gap-2">
                                     <!-- Edit Button -->
@@ -103,8 +77,8 @@ die();
                 </div>
 
                 <div>
-                    <label for="published" class="block text-sm font-medium text-gray-700">Published Date</label>
-                    <input type="date" id="published" name="published" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    <label for="publishDate" class="block text-sm font-medium text-gray-700">publishDate Date</label>
+                    <input type="date" id="publishDate" name="publishDate" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 <button type="submit" class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200">

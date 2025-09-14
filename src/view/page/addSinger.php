@@ -1,35 +1,9 @@
 <?php
-// A simple array to act as our dummy database for singers
-$singer_list = [
-    [
-        'name' => 'Freddie Mercury',
-        'birthdate' => '1946-09-05',
-        'genre' => 'Rock',
-        'height' => '177 cm',
-        'weight' => '74 kg'
-    ],
-    [
-        'name' => 'Kurt Cobain',
-        'birthdate' => '1967-02-20',
-        'genre' => 'Grunge, Alternative Rock',
-        'height' => '175 cm',
-        'weight' => '69 kg'
-    ],
-    [
-        'name' => 'Axl Rose',
-        'birthdate' => '1962-02-06',
-        'genre' => 'Hard Rock',
-        'height' => '175 cm',
-        'weight' => '77 kg'
-    ],
-    [
-        'name' => 'Elvis Presley',
-        'birthdate' => '1935-01-08',
-        'genre' => 'Rock and Roll, Pop',
-        'height' => '182 cm',
-        'weight' => '77 kg'
-    ]
-];
+
+require_once("../../model/Singer.php");
+$singer = new Singer();
+$singer_list = $singer->getAllSingers();
+
 ?>
 
 <!DOCTYPE html>
@@ -38,7 +12,6 @@ $singer_list = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List Singer</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 font-sans">
@@ -65,7 +38,7 @@ $singer_list = [
                     <?php foreach ($singer_list as $index => $singer): ?>
                         <tr class="hover:bg-gray-50">
                             <td class="p-4 text-gray-700"><?php echo htmlspecialchars($singer['name']); ?></td>
-                            <td class="p-4 text-gray-700"><?php echo htmlspecialchars($singer['birthdate']); ?></td>
+                            <td class="p-4 text-gray-700"><?php echo htmlspecialchars($singer['birthDate']); ?></td>
                             <td class="p-4 text-gray-700"><?php echo htmlspecialchars($singer['genre']); ?></td>
                             <td class="p-4 text-gray-700"><?php echo htmlspecialchars($singer['height']); ?></td>
                             <td class="p-4 text-gray-700"><?php echo htmlspecialchars($singer['weight']); ?></td>
