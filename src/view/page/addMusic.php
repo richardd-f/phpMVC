@@ -1,6 +1,28 @@
 <?php
-    // A simple array to act as our dummy database
-    $music_list = $music_list ?? [];
+    require_once __DIR__ . "/../../model/Music.php";
+    
+    $musicModel = new Music();
+    $music_list = $musicModel->getAllMusic();
+
+    // Function to convert seconds to "mm:ss" format
+    function formatDuration($seconds) {
+        $minutes = floor($seconds / 60);
+        $secs = $seconds % 60;
+        return sprintf("%d:%02d", $minutes, $secs);
+    }
+
+    // Check if edit mode
+    $editMode = false;
+    $musicToEdit = null;
+
+    if (isset($_GET['action']) && $_GET['action'] === 'edit' && isset($_GET['musicId'])) {
+        $result = $musicModel->getMusicById($_GET['musicId']);
+        if ($result["success"] && $result["data"]) {
+            $musicToEdit = $result["data"];   // <-- ambil row
+            $editMode = true;
+        }
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -25,77 +47,111 @@
                     <tr>
                         <th class="p-4 font-semibold text-sm uppercase">Title</th>
                         <th class="p-4 font-semibold text-sm uppercase">Duration</th>
-                        <th class="p-4 font-semibold text-sm uppercase">Published</th>
+                        <th class="p-4 font-semibold text-sm uppercase">Published on</th>
                         <th class="p-4 font-semibold text-sm uppercase text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                    <?php foreach ($music_list as $index => $music): ?>
-                        <tr class="hover:bg-gray-50">
-                            <td class="p-4 text-gray-700"><?php echo htmlspecialchars($music['title']); ?></td>
-                            <td class="p-4 text-gray-700"><?php echo htmlspecialchars($music['duration']); ?></td>
-                            <td class="p-4 text-gray-700"><?php echo htmlspecialchars($music['published']); ?></td>
-                            <td class="p-4">
-                                <div class="flex justify-center items-center gap-2">
-                                    <!-- Edit Button -->
-                                    <a href="?action=edit&id=<?php echo $index; ?>" 
-                                       class="inline-flex items-center justify-center bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.75 20.902l-4.5 1.125 1.125-4.5L16.862 4.487z" />
-                                        </svg>
-                                    </a>
-                                    <!-- Delete Button -->
-                                    <a href="?action=delete&id=<?php echo $index; ?>" 
-                                       class="inline-flex items-center justify-center bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+                    <?php if ($music_list["success"] && !empty($music_list["data"])): ?>
+                        <?php foreach ($music_list["data"] as $index => $music): ?>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 text-gray-700"><?php echo htmlspecialchars($music['title'] ?? ''); ?></td>
+                                <td class="p-4 text-gray-700">
+                                    <?php echo formatDuration($music['duration']); ?>
+                                </td>
+                                <td class="p-4 text-gray-700"><?php echo htmlspecialchars($music['publishDate'] ?? ''); ?></td>
+                                <td class="p-4">
+                                    <div class="flex justify-center items-center gap-2">
+                                        <!-- Edit Button -->
+                                        <a href="?action=edit&musicId=<?php echo $music['music_id']; ?>" 
+                                        class="inline-flex items-center justify-center bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.75 20.902l-4.5 1.125 1.125-4.5L16.862 4.487z" />
+                                            </svg>
+                                        </a>
+                                        <!-- Delete Button -->
+                                        <a href="../../controller/musicController.php?action=delete&musicId=<?php echo $music['music_id']; ?>" 
+                                        onclick="return confirm('Are you sure you want to delete this music?');"
+                                        class="inline-flex items-center justify-center bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                    <tr>
+                        <td colspan="4" class="p-4 text-center text-gray-500">
+                            <?php echo htmlspecialchars($music_list["err"] ?? "No music found"); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
 
+        </div>
         <hr class="my-8">
-
         <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Add New Music</h2>
-            <form action="../../controller/musicController.php" method="POST" class="space-y-4">
-                <div>
-                    <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-                    <input type="text" id="title" name="title" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">
+        <?php echo $editMode ? "Edit Music" : "Add New Music"; ?>
+    </h2>
 
-                <div>
-                    <label for="duration" class="block text-sm font-medium text-gray-700">Duration (e.g., 3:45)</label>
-                    <input type="text" id="duration" name="duration" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
+    <form action="../../controller/musicController.php" method="POST" class="space-y-4">
+        <?php if ($editMode): ?>
+            <input type="hidden" name="music_id" value="<?php echo htmlspecialchars($musicToEdit['music_id']); ?>">
+        <?php endif; ?>
 
-                <div>
-                    <label for="publishDate" class="block text-sm font-medium text-gray-700">Published Date</label>
-                    <input type="date" id="publishDate" name="publishDate" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-
-                <button name="addmusic_button" type="submit" class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200">
-                    Add Music
-                </button>
-            </form>
+        <div>
+            <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+            <input type="text" id="title" name="title"
+                value="<?php echo $editMode ? htmlspecialchars($musicToEdit['title'] ?? '') : ''; ?>"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
+                    focus:outline-none focus:ring-blue-500 focus:border-blue-500">
         </div>
+
+        <div>
+            <label for="duration" class="block text-sm font-medium text-gray-700">Duration (mm:ss)</label>
+            <input type="text" id="duration" name="duration"
+                value="<?php echo $editMode ? htmlspecialchars(formatDuration($musicToEdit['duration'])) : ''; ?>"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
+                    focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <div>
+            <label for="publishDate" class="block text-sm font-medium text-gray-700">Published Date</label>
+            <input type="date" id="publishDate" name="publishDate"
+                value="<?php echo $editMode ? htmlspecialchars($musicToEdit['publishDate'] ?? '') : ''; ?>"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
+                    focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+        </div>
+            <button name="<?php echo $editMode ? 'editmusic_button' : 'addmusic_button'; ?>" 
+                type="submit"
+                class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200">
+                <?php echo $editMode ? 'Update Music' : 'Add Music'; ?>
+            </button>
+        </form>
+    </div>
 
     </div>
 
-    <!-- Alert bahwa music sudah berhasil ditambahkan  -->
-    <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
-    <script>
-        if (confirm('Music added successfully! Click OK to continue.')) {
-            // User clicked OK
-            console.log('User acknowledged the success message');
-        }
-    </script>
+    <!-- Alert bahwa music sudah berhasil ditambahkan -->
+    <?php if (isset($_GET['success'])): ?>
+        <?php if ($_GET['success'] == 1): ?>
+            <script>
+                if (confirm('Music added successfully! Click OK to continue.')) {
+                    console.log('User acknowledged the add success message');
+                }
+            </script>
+        <?php elseif ($_GET['success'] == 2): ?>
+            <script>
+                if (confirm('Music updated successfully! Click OK to continue.')) {
+                    console.log('User acknowledged the update success message');
+                }
+            </script>
+        <?php endif; ?>
     <?php endif; ?>
-
+    
 </body>
 </html>
