@@ -2,7 +2,7 @@
     require_once __DIR__ . "/../../model/Music.php";
     
     $musicModel = new Music();
-    $music_list = $musicModel->getAllMusic();
+    $music_list = $musicModel->getAllMusic() ?? [];
 
     // Function to convert seconds to "mm:ss" format
     function formatDuration($seconds) {

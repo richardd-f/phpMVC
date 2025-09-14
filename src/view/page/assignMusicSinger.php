@@ -1,30 +1,14 @@
 <?php
-// Dummy database for existing assignments
-$assignments = [
-    [
-        'music_title' => 'Bohemian Rhapsody',
-        'singer_name' => 'Freddie Mercury'
-    ],
-    [
-        'music_title' => 'Smells Like Teen Spirit',
-        'singer_name' => 'Kurt Cobain'
-    ],
-    [
-        'music_title' => 'Hotel California',
-        'singer_name' => 'Don Henley'
-    ],
-];
-
 require_once("../../model/Music.php");
 require_once("../../model/Singer.php");
 
 $music = new Music();
 $singer = new Singer();
 
-$music_list = $music->getAllMusic();
-$singer_list = $singer->getAllSingers();
+$music_list = $music->getAllNotAssignedMusics()["data"] ?? [];
+$singer_list = $singer->getAllSingers() ?? [];
+$assignments = $music->getAllAssignedMusics()["data"] ?? [];
 
-// perlu getMusicWithoutSinger()
 
 ?>
 
@@ -34,7 +18,6 @@ $singer_list = $singer->getAllSingers();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assign Music & Singer</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 font-sans">
@@ -84,13 +67,13 @@ $singer_list = $singer->getAllSingers();
         <!-- Assigner Form -->
         <div class="bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold text-gray-800 mb-4">Create New Assignment</h2>
-            <form action="" method="POST" class="space-y-4">
+            <form action="/controller/MusicSinger.php?action=add" method="POST" class="space-y-4">
                 <div>
                     <label for="music" class="block text-sm font-medium text-gray-700">Select Music</label>
                     <select id="music" name="music" class="mt-1 block w-full pl-3 pr-10 py-2 border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md border">
                         <option>-- Choose a song --</option>
                         <?php foreach ($music_list as $music): ?>
-                            <option value="<?php echo htmlspecialchars($music['title']); ?>">
+                            <option value="<?php echo htmlspecialchars($music['music_id']); ?>">
                                 <?php echo htmlspecialchars($music['title']); ?>
                             </option>
                         <?php endforeach; ?>
@@ -102,7 +85,7 @@ $singer_list = $singer->getAllSingers();
                     <select id="singer" name="singer" class="mt-1 block w-full pl-3 pr-10 py-2 border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md border">
                         <option>-- Choose a singer --</option>
                         <?php foreach ($singer_list as $singer): ?>
-                            <option value="<?php echo htmlspecialchars($singer['name']); ?>">
+                            <option value="<?php echo htmlspecialchars($singer['singer_id']); ?>">
                                 <?php echo htmlspecialchars($singer['name']); ?>
                             </option>
                         <?php endforeach; ?>

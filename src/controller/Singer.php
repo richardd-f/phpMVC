@@ -32,7 +32,7 @@ if(isset($_GET["action"])){
 
         if($queryStatus["success"]){
             redirectWith("/view/page/addSinger.php", [
-                "msg" => "Singer Saved!!!"
+                "msg" => $_POST["name"]." Added!!!"
             ]);
         }else{
             redirectWith($singerPath, [
@@ -82,7 +82,7 @@ if(isset($_GET["action"])){
         );
         if($queryStatus["success"]){
             redirectWith($singerPath, [
-                "msg" => "Singer Updated !!!"
+                "msg" => $_POST["name"]." Updated !!!"
             ]);
         }else{
             redirectWith($singerPath, [
@@ -113,7 +113,7 @@ if(isset($_GET["action"])){
 
     else{
         redirectWith($singerPath, [
-            "err" => "Page is Restricted"
+            "err" => "Invalid address"
         ]);
     }
 }
