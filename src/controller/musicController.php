@@ -1,7 +1,9 @@
 <?php
 include("../model/Music.php");
+require_once("Util.php");
 session_start();
 
+$musicPath = "../view/page/addMusic.php";
 /* Convert "mm:ss" string to total seconds */
 function parseDuration($timeString) {
     $parts = explode(':', $timeString);
@@ -45,18 +47,30 @@ function updateMusic() {
 /* Routing actions */
 if (isset($_POST['addmusic_button'])) {
     if (createMusic()) {
-        header("Location: ../view/page/addMusic.php?success=1");
+        // header("Location: ../view/page/addMusic.php?success=1");
+        redirectWith($musicPath, [
+            "msg" =>  "Music Added !!!"
+        ]);
     } else {
-        header("Location: ../view/page/addMusic.php?error=1");
+        // header("Location: ../view/page/addMusic.php?error=1");
+        redirectWith($musicPath, [
+            "err" => "Failed to add music !!!"
+        ]);
     }
     exit;
 }
 
 if (isset($_POST['editmusic_button'])) {
     if (updateMusic()) {
-        header("Location: ../view/page/addMusic.php?success=2"); // success=2 = updated
+        // header("Location: ../view/page/addMusic.php?success=2"); // success=2 = updated
+        redirectWith($musicPath, [
+            "msg" => "Music Updated !!!"
+        ]);
     } else {
-        header("Location: ../view/page/addMusic.php?error=1");
+        // header("Location: ../view/page/addMusic.php?error=1");
+        redirectWith($musicPath, [
+            "err" => "Failed to updated music !!!"
+        ]);
     }
     exit;
 }
@@ -81,9 +95,15 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['music
     $result = deleteMusic();
 
     if ($result["success"]) {
-        header("Location: ../view/page/addMusic.php?success=3"); // success=3 = deleted
+        // header("Location: ../view/page/addMusic.php?success=3"); // success=3 = deleted
+        redirectWith($musicPath, [
+            "msg" => "Music Deleted !!!"
+        ]);
     } else {
-        header("Location: ../view/page/addMusic.php?error=1");
+        // header("Location: ../view/page/addMusic.php?error=1");
+        redirectWith($musicPath, [
+            "err" => "Failed to delete music !!!"
+        ]);
     }
     exit;
 }
