@@ -8,13 +8,15 @@ class Singer {
         $this->conn = Database::getInstance();
     }
 
-    public function addSinger($name, $birthdate, $genre) {
-        $sql = "INSERT INTO Singer (name, birthdate, genre) VALUES (:name, :birthdate, :genre)";
+    public function addSinger($name, $birthdate, $genre, $weight, $height) {
+        $sql = "INSERT INTO Singer (name, birthdate, genre, weight, height) VALUES (:name, :birthdate, :genre, :weight, :height)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             ':name' => $name,
             ':birthdate' => $birthdate,
-            ':genre' => $genre
+            ':genre' => $genre,
+            ':weight' => $weight,
+            ':height' => $height
         ]);
     }
 
