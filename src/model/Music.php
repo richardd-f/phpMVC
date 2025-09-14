@@ -10,13 +10,13 @@ class Music {
 
     // CRUD operations for Music
     // Create Music
-    public function addMusic($title, $duration, $published) {
-        $sql = "INSERT INTO Music (title, duration, published) VALUES (:title, :duration, :published)";
+    public function addMusic($title, $duration, $publishDate) {
+        $sql = "INSERT INTO Music (title, duration, publishDate) VALUES (:title, :duration, :publishDate)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             ':title' => $title,
             ':duration' => $duration,
-            ':published' => $published
+            ':publishDate' => $publishDate
         ]);
     }
 

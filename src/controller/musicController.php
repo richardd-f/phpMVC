@@ -8,10 +8,10 @@ function createMusic() {
     // Get form data
     $title = $_POST['title'];
     $duration = $_POST['duration'];
-    $published = $_POST['published'];
+    $publishDate = $_POST['publishDate'];
     
     // Save directly to database
-    $result = $music->addMusic($title, $duration, $published);
+    $result = $music->addMusic($title, $duration, $publishDate);
     
     return $result;
 }
