@@ -76,7 +76,7 @@ $music_list = $music->getAllMusic();
                 </div>
 
                 <div>
-                    <label for="publishDate" class="block text-sm font-medium text-gray-700">publishDate Date</label>
+                    <label for="publishDate" class="block text-sm font-medium text-gray-700">Published Date</label>
                     <input type="date" id="publishDate" name="publishDate" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
@@ -88,7 +88,7 @@ $music_list = $music->getAllMusic();
 
     </div>
 
-    <!-- TARUH DI SINI - sebelum closing </body> tag -->
+    <!-- Alert bahwa music sudah berhasil ditambahkan  -->
     <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
     <script>
         if (confirm('Music added successfully! Click OK to continue.')) {
