@@ -13,7 +13,6 @@
     </head>
     <body class="bg-gray-100 font-sans">
         <?php require_once("../nav.php")?>
-        <?= var_dump($music_list2) ?>
 
     <div class="max-w-5xl mx-auto p-4 sm:p-6 md:p-8">
 
