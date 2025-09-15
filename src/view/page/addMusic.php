@@ -11,17 +11,11 @@
         return sprintf("%d:%02d", $minutes, $secs);
     }
 
-    // Check if edit mode
-    $editMode = false;
-    $musicToEdit = null;
 
-    if (isset($_GET['action']) && $_GET['action'] === 'edit' && isset($_GET['musicId'])) {
-        $result = $musicModel->getMusicById($_GET['musicId']);
-        if ($result["success"] && $result["data"]) {
-            $musicToEdit = $result["data"];   // <-- ambil row
-            $editMode = true;
-        }
-    }
+    $isEdit = isset($_GET["edit"]);
+    $actionUrl = $isEdit 
+    ? "../../controller/Music.php?action=edit&id=" . $_GET["singer_id"]
+    : "../../controller/Music.php?action=add";
 ?>
 
 <!DOCTYPE html>
@@ -61,7 +55,7 @@
                                 <td class="p-4">
                                     <div class="flex justify-center items-center gap-2">
                                         <!-- Edit Button -->
-                                        <a href="?action=edit&musicId=<?php echo $music['music_id']; ?>" 
+                                        <a href="/controller/Music.php?action=edit&musicId=<?php echo $music['music_id']; ?>" 
                                         class="inline-flex items-center justify-center bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.75 20.902l-4.5 1.125 1.125-4.5L16.862 4.487z" />
@@ -96,7 +90,7 @@
         <?php echo $editMode ? "Edit Music" : "Add New Music"; ?>
     </h2>
 
-    <form action="../../controller/musicController.php" method="POST" class="space-y-4">
+    <form action="../../controller/Music.php" method="POST" class="space-y-4">
         <?php if ($editMode): ?>
             <input type="hidden" name="music_id" value="<?php echo htmlspecialchars($musicToEdit['music_id']); ?>">
         <?php endif; ?>

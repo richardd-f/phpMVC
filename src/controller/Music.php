@@ -158,8 +158,6 @@ if (isset($_POST['addmusic_button'])) {
 
 // Edit music
 if (isset($_POST['editmusic_button'])) {
-    $result = updateMusic();
-
     if ($result["success"]) {
         redirectWith("../view/page/addMusic.php", ["success" => 2]); // updated
     } else {
@@ -175,5 +173,23 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['music
         header("Location: ../view/page/addMusic.php?success=3"); // success=3 = deleted
     } else {
         header("Location: ../view/page/addMusic.php?error=1");
+    }
+}
+
+if(isset($_GET["action"])){
+    if($_GET["action"] == "edit" && isset($_GET["id"])){
+        $id = $_GET["id"];
+        $statusQuery =  $music->getMusicById($id);
+
+        if(!$statusQuery["success"]){
+            redirectWith($musicPath, [
+                "err" => $statusQuery["err"]
+            ]);
+        }
+
+        redirectWith($musicPath, array_merge(
+            ["action" => "edit"],
+            $statusQuery["data"]
+        ));
     }
 }
