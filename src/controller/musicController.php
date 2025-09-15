@@ -1,18 +1,54 @@
 <?php
+require_once("Util.php"); // pake redirectWith
 include("../model/Music.php");
 require_once("Util.php");
 session_start();
 
 $musicPath = "../view/page/addMusic.php";
 /* Convert "mm:ss" string to total seconds */
+/* Convert "mm:ss" string to total seconds with error handling */
 function parseDuration($timeString) {
-    $parts = explode(':', $timeString);
-    if (count($parts) === 2) {
-        $minutes = (int)$parts[0];
-        $seconds = (int)$parts[1];
-        return ($minutes * 60) + $seconds;
+    try {
+        $timeString = trim($timeString);
+
+        // Case 1: format mm:ss
+        if (preg_match('/^\d{1,2}:\d{2}$/', $timeString)) {
+            $parts = explode(':', $timeString);
+            $minutes = (int)$parts[0];
+            $seconds = (int)$parts[1];
+
+            if ($seconds >= 60) {
+                return [
+                    "success" => false,
+                    "err" => "Invalid format: seconds must be less than 60."
+                ];
+            }
+
+            return [
+                "success" => true,
+                "data" => ($minutes * 60) + $seconds
+            ];
+        }
+
+        // Case 2: total detik (angka murni)
+        if (ctype_digit($timeString)) {
+            return [
+                "success" => true,
+                "data" => (int)$timeString
+            ];
+        }
+
+        // Kalau format tidak dikenali
+        return [
+            "success" => false,
+            "err" => "Invalid duration format. Use mm:ss or total seconds."
+        ];
+    } catch (Exception $e) {
+        return [
+            "success" => false,
+            "err" => $e->getMessage()
+        ];
     }
-    return (int)$timeString; // fallback kalau misalnya user input "120"
 }
 
 /* Create new music */
@@ -38,7 +74,10 @@ function updateMusic() {
     $publishDate = $_POST['publishDate'] ?? null;
 
     if (!$music_id) {
-        return false;
+        return [
+            "success" => false,
+            "err" => "Music ID not provided"
+        ];
     }
 
     return $music->updateMusic($music_id, $title, $durationInSeconds, $publishDate);
@@ -79,7 +118,7 @@ if (isset($_POST['editmusic_button'])) {
 function deleteMusic() {
     $music = new Music();
 
-    $music_id = $_GET['musicId'] ?? null; // use GET instead of POST
+    $music_id = $_GET['musicId'] ?? null; // pakai GET
     if (!$music_id) {
         return [
             "success" => false,
@@ -90,21 +129,37 @@ function deleteMusic() {
     return $music->deleteMusic($music_id);
 }
 
-// Handle GET delete (from ?action=delete&musicId=...)
+/* Routing actions */
+
+// Add music
+if (isset($_POST['addmusic_button'])) {
+    $result = createMusic();
+
+    if ($result["success"]) {
+        redirectWith("../view/page/addMusic.php", ["success" => 1]); // added
+    } else {
+        redirectWith("../view/page/addMusic.php", ["error" => $result["err"] ?? "Failed to add music"]);
+    }
+}
+
+// Edit music
+if (isset($_POST['editmusic_button'])) {
+    $result = updateMusic();
+
+    if ($result["success"]) {
+        redirectWith("../view/page/addMusic.php", ["success" => 2]); // updated
+    } else {
+        redirectWith("../view/page/addMusic.php", ["error" => $result["err"] ?? "Failed to update music"]);
+    }
+}
+
+// Delete music
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['musicId'])) {
     $result = deleteMusic();
 
     if ($result["success"]) {
-        // header("Location: ../view/page/addMusic.php?success=3"); // success=3 = deleted
-        redirectWith($musicPath, [
-            "msg" => "Music Deleted !!!"
-        ]);
+        header("Location: ../view/page/addMusic.php?success=3"); // success=3 = deleted
     } else {
-        // header("Location: ../view/page/addMusic.php?error=1");
-        redirectWith($musicPath, [
-            "err" => "Failed to delete music !!!"
-        ]);
+        header("Location: ../view/page/addMusic.php?error=1");
     }
-    exit;
 }
-

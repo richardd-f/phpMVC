@@ -41,7 +41,7 @@ if(isset($_GET["action"])){
         }
     }
     
-    // edit video
+    // edit
     else if($action == "edit"){
 
         // check is singer ID isset
