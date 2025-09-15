@@ -55,8 +55,60 @@ class Music {
 
     // Read Music
     public function getAllMusic() {
-            try {
+        try {
             $sql = "SELECT * FROM Music";
+            $stmt = $this->conn->query($sql);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return [
+                "success" => true,
+                "data" => $data,
+                "err" => null
+            ];
+        } catch (PDOException $e) {
+            return [
+                "success" => false,
+                "data" => null,
+                "err" => $e->getMessage()
+            ];
+        }
+    }
+
+    // get all music that is ASSIGNED to singer
+    public function getAllAssignedMusics() {
+        try {
+            $sql = "SELECT 
+                        m.music_id, 
+                        m.title AS music_title, 
+                        m.duration, 
+                        m.publishDate,
+                        s.singer_id,
+                        s.name AS singer_name
+                    FROM Music m
+                    INNER JOIN Singer s ON m.singer_id = s.singer_id";
+            
+            $stmt = $this->conn->query($sql);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return [
+                "success" => true,
+                "data" => $data,
+                "err" => null
+            ];
+        } catch (PDOException $e) {
+            return [
+                "success" => false,
+                "data" => null,
+                "err" => $e->getMessage()
+            ];
+        }
+    }
+
+    // get all music that is NOT ASSIGNED
+    public function getAllNotAssignedMusics(){
+        try {
+            $sql = "SELECT * FROM Music WHERE singer_id IS NULL";
+            
             $stmt = $this->conn->query($sql);
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
