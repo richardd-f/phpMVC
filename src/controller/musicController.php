@@ -1,4 +1,5 @@
 <?php
+require_once("Util.php"); // pake redirectWith
 include("../model/Music.php");
 session_start();
 
@@ -36,36 +37,20 @@ function updateMusic() {
     $publishDate = $_POST['publishDate'] ?? null;
 
     if (!$music_id) {
-        return false;
+        return [
+            "success" => false,
+            "err" => "Music ID not provided"
+        ];
     }
 
     return $music->updateMusic($music_id, $title, $durationInSeconds, $publishDate);
-}
-
-/* Routing actions */
-if (isset($_POST['addmusic_button'])) {
-    if (createMusic()) {
-        header("Location: ../view/page/addMusic.php?success=1");
-    } else {
-        header("Location: ../view/page/addMusic.php?error=1");
-    }
-    exit;
-}
-
-if (isset($_POST['editmusic_button'])) {
-    if (updateMusic()) {
-        header("Location: ../view/page/addMusic.php?success=2"); // success=2 = updated
-    } else {
-        header("Location: ../view/page/addMusic.php?error=1");
-    }
-    exit;
 }
 
 /* Delete music */
 function deleteMusic() {
     $music = new Music();
 
-    $music_id = $_GET['musicId'] ?? null; // use GET instead of POST
+    $music_id = $_GET['musicId'] ?? null; // pakai GET
     if (!$music_id) {
         return [
             "success" => false,
@@ -76,15 +61,37 @@ function deleteMusic() {
     return $music->deleteMusic($music_id);
 }
 
-// Handle GET delete (from ?action=delete&musicId=...)
+/* Routing actions */
+
+// Add music
+if (isset($_POST['addmusic_button'])) {
+    $result = createMusic();
+
+    if ($result["success"]) {
+        redirectWith("../view/page/addMusic.php", ["success" => 1]); // added
+    } else {
+        redirectWith("../view/page/addMusic.php", ["error" => $result["err"] ?? "Failed to add music"]);
+    }
+}
+
+// Edit music
+if (isset($_POST['editmusic_button'])) {
+    $result = updateMusic();
+
+    if ($result["success"]) {
+        redirectWith("../view/page/addMusic.php", ["success" => 2]); // updated
+    } else {
+        redirectWith("../view/page/addMusic.php", ["error" => $result["err"] ?? "Failed to update music"]);
+    }
+}
+
+// Delete music
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['musicId'])) {
     $result = deleteMusic();
 
     if ($result["success"]) {
-        header("Location: ../view/page/addMusic.php?success=3"); // success=3 = deleted
+        redirectWith("../view/page/addMusic.php", ["success" => 3]); // deleted
     } else {
-        header("Location: ../view/page/addMusic.php?error=1");
+        redirectWith("../view/page/addMusic.php", ["error" => $result["err"] ?? "Failed to delete music"]);
     }
-    exit;
 }
-

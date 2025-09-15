@@ -134,23 +134,6 @@
     </div>
 
     </div>
-
-    <!-- Alert bahwa music sudah berhasil ditambahkan -->
-    <?php if (isset($_GET['success'])): ?>
-        <?php if ($_GET['success'] == 1): ?>
-            <script>
-                if (confirm('Music added successfully! Click OK to continue.')) {
-                    console.log('User acknowledged the add success message');
-                }
-            </script>
-        <?php elseif ($_GET['success'] == 2): ?>
-            <script>
-                if (confirm('Music updated successfully! Click OK to continue.')) {
-                    console.log('User acknowledged the update success message');
-                }
-            </script>
-        <?php endif; ?>
-    <?php endif; ?>
     
 </body>
 </html>
