@@ -6,14 +6,49 @@ session_start();
 
 $musicPath = "../view/page/addMusic.php";
 /* Convert "mm:ss" string to total seconds */
+/* Convert "mm:ss" string to total seconds with error handling */
 function parseDuration($timeString) {
-    $parts = explode(':', $timeString);
-    if (count($parts) === 2) {
-        $minutes = (int)$parts[0];
-        $seconds = (int)$parts[1];
-        return ($minutes * 60) + $seconds;
+    try {
+        $timeString = trim($timeString);
+
+        // Case 1: format mm:ss
+        if (preg_match('/^\d{1,2}:\d{2}$/', $timeString)) {
+            $parts = explode(':', $timeString);
+            $minutes = (int)$parts[0];
+            $seconds = (int)$parts[1];
+
+            if ($seconds >= 60) {
+                return [
+                    "success" => false,
+                    "err" => "Invalid format: seconds must be less than 60."
+                ];
+            }
+
+            return [
+                "success" => true,
+                "data" => ($minutes * 60) + $seconds
+            ];
+        }
+
+        // Case 2: total detik (angka murni)
+        if (ctype_digit($timeString)) {
+            return [
+                "success" => true,
+                "data" => (int)$timeString
+            ];
+        }
+
+        // Kalau format tidak dikenali
+        return [
+            "success" => false,
+            "err" => "Invalid duration format. Use mm:ss or total seconds."
+        ];
+    } catch (Exception $e) {
+        return [
+            "success" => false,
+            "err" => $e->getMessage()
+        ];
     }
-    return (int)$timeString; // fallback kalau misalnya user input "120"
 }
 
 /* Create new music */

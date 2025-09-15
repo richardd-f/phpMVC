@@ -188,6 +188,25 @@ class Music {
         }
     }
 
+    // Delete assigned singer
+    public function unassignSinger($music_id) {
+        try {
+            $sql = "UPDATE Music SET singer_id = NULL WHERE music_id = :music_id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':music_id' => $music_id]);
+
+            return [
+                "success" => true,
+                "err" => null
+            ];
+        } catch (PDOException $e) {
+            return [
+                "success" => false,
+                "err" => $e->getMessage()
+            ];
+        }
+    }
+
     // Delete Music
     public function deleteMusic($music_id) {
         try {
