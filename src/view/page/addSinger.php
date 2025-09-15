@@ -53,11 +53,11 @@ $prefWeight = $isEdit ? ($_GET["weight"] ?? "") : "";
                     <?php if (!empty($singer_list)): ?>
                         <?php foreach ($singer_list as $index => $singer): ?>
                             <tr class="hover:bg-gray-50">
-                                <td class="p-4 text-gray-700"><?php echo htmlspecialchars($singer['name']); ?></td>
-                                <td class="p-4 text-gray-700"><?php echo htmlspecialchars($singer['birthDate']); ?></td>
-                                <td class="p-4 text-gray-700"><?php echo htmlspecialchars($singer['genre']); ?></td>
-                                <td class="p-4 text-gray-700"><?php echo htmlspecialchars($singer['height']); ?></td>
-                                <td class="p-4 text-gray-700"><?php echo htmlspecialchars($singer['weight']); ?></td>
+                                <td class="p-4 text-gray-700"><?= htmlspecialchars($singer['name']); ?></td>
+                                <td class="p-4 text-gray-700"><?= htmlspecialchars($singer['birthDate']); ?></td>
+                                <td class="p-4 text-gray-700"><?= htmlspecialchars($singer['genre']); ?></td>
+                                <td class="p-4 text-gray-700"><?= htmlspecialchars($singer['height']); ?></td>
+                                <td class="p-4 text-gray-700"><?= htmlspecialchars($singer['weight']); ?></td>
                                 <td class="p-4">
                                     <div class="flex justify-center items-center gap-2">
                                         <!-- Edit Button -->
@@ -69,6 +69,7 @@ $prefWeight = $isEdit ? ($_GET["weight"] ?? "") : "";
                                         </a>
                                         <!-- Delete Button -->
                                         <a href="/controller/Singer.php?action=delete&id=<?php echo $singer["singer_id"]; ?>" 
+                                        onclick = "return confirm('Are you sure want to delete this Singer')"
                                         class="inline-flex items-center justify-center bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
