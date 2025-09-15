@@ -22,7 +22,6 @@
             $editMode = true;
         }
     }
-
 ?>
 
 <!DOCTYPE html>
@@ -104,7 +103,7 @@
 
         <div>
             <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-            <input type="text" id="title" name="title"
+            <input required type="text" id="title" name="title"
                 value="<?php echo $editMode ? htmlspecialchars($musicToEdit['title'] ?? '') : ''; ?>"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
                     focus:outline-none focus:ring-blue-500 focus:border-blue-500">
@@ -112,7 +111,7 @@
 
         <div>
             <label for="duration" class="block text-sm font-medium text-gray-700">Duration (mm:ss)</label>
-            <input type="text" id="duration" name="duration"
+            <input required type="text" id="duration" name="duration"
                 value="<?php echo $editMode ? htmlspecialchars(formatDuration($musicToEdit['duration'])) : ''; ?>"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
                     focus:outline-none focus:ring-blue-500 focus:border-blue-500">
@@ -120,7 +119,7 @@
 
         <div>
             <label for="publishDate" class="block text-sm font-medium text-gray-700">Published Date</label>
-            <input type="date" id="publishDate" name="publishDate"
+            <input required type="date" id="publishDate" name="publishDate"
                 value="<?php echo $editMode ? htmlspecialchars($musicToEdit['publishDate'] ?? '') : ''; ?>"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
                     focus:outline-none focus:ring-blue-500 focus:border-blue-500">

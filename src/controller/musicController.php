@@ -6,7 +6,6 @@ session_start();
 
 $musicPath = "../view/page/addMusic.php";
 /* Convert "mm:ss" string to total seconds */
-/* Convert "mm:ss" string to total seconds with error handling */
 function parseDuration($timeString) {
     try {
         $timeString = trim($timeString);
@@ -52,7 +51,7 @@ function parseDuration($timeString) {
 }
 
 /* Create new music */
-function createMusic() {
+function createMusic($musicPath) {
     $music = new Music();
 
     $title = $_POST['title'] ?? '';
@@ -60,7 +59,20 @@ function createMusic() {
     $durationInSeconds = parseDuration($duration);
     $publishDate = $_POST['publishDate'] ?? null;
 
-    return $music->addMusic($title, $durationInSeconds, $publishDate);
+    // check parseDuration status, if error redirect
+    if(!$durationInSeconds["success"]){
+        redirectWith($musicPath,[
+            "err" => $durationInSeconds["err"]
+        ]);
+    }
+
+    $status = $music->addMusic($title, $durationInSeconds["data"], $publishDate);
+    if (!$status["success"]) {
+        redirectWith($musicPath, [
+            "err" => $status["err"] ?? "Failed to add music"
+        ]);
+    }
+    return true;
 }
 
 /* Update music */
@@ -70,8 +82,10 @@ function updateMusic() {
     $music_id = $_POST['music_id'] ?? null;
     $title = $_POST['title'] ?? '';
     $duration = $_POST['duration'] ?? '0:00';
-    $durationInSeconds = parseDuration($duration);
+    $durationInSeconds = parseDuration($duration);    
     $publishDate = $_POST['publishDate'] ?? null;
+    var_dump($music_id, $title, $durationInSeconds, $publishDate);
+    die();
 
     if (!$music_id) {
         return [
@@ -85,7 +99,7 @@ function updateMusic() {
 
 /* Routing actions */
 if (isset($_POST['addmusic_button'])) {
-    if (createMusic()) {
+    if (createMusic($musicPath)) {
         // header("Location: ../view/page/addMusic.php?success=1");
         redirectWith($musicPath, [
             "msg" =>  "Music Added !!!"
@@ -133,7 +147,7 @@ function deleteMusic() {
 
 // Add music
 if (isset($_POST['addmusic_button'])) {
-    $result = createMusic();
+    $result = createMusic($musicPath);
 
     if ($result["success"]) {
         redirectWith("../view/page/addMusic.php", ["success" => 1]); // added
