@@ -6,7 +6,6 @@ session_start();
 
 $musicPath = "../view/page/addMusic.php";
 /* Convert "mm:ss" string to total seconds */
-/* Convert "mm:ss" string to total seconds with error handling */
 function parseDuration($timeString) {
     try {
         $timeString = trim($timeString);
@@ -60,12 +59,20 @@ function createMusic($musicPath) {
     $durationInSeconds = parseDuration($duration);
     $publishDate = $_POST['publishDate'] ?? null;
 
-    $status = $music->addMusic($title, $durationInSeconds, $publishDate);
+    // check parseDuration status, if error redirect
+    if(!$durationInSeconds["success"]){
+        redirectWith($musicPath,[
+            "err" => $durationInSeconds["err"]
+        ]);
+    }
+
+    $status = $music->addMusic($title, $durationInSeconds["data"], $publishDate);
     if (!$status["success"]) {
         redirectWith($musicPath, [
             "err" => $status["err"] ?? "Failed to add music"
         ]);
     }
+    return true;
 }
 
 /* Update music */
