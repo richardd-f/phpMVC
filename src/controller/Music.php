@@ -84,8 +84,14 @@ function updateMusic() {
     $duration = $_POST['duration'] ?? '0:00';
     $durationInSeconds = parseDuration($duration);    
     $publishDate = $_POST['publishDate'] ?? null;
-    var_dump($music_id, $title, $durationInSeconds, $publishDate);
-    die();
+
+    // check parseDuration status, if error redirect
+    if(!$durationInSeconds["success"]){
+        redirectWith($musicPath,[
+            "err" => $durationInSeconds["err"]
+        ]);
+    }
+
 
     if (!$music_id) {
         return [
@@ -94,7 +100,13 @@ function updateMusic() {
         ];
     }
 
-    return $music->updateMusic($music_id, $title, $durationInSeconds, $publishDate);
+    $status =  $music->updateMusic($music_id, $title, $durationInSeconds["data"], $publishDate);
+    if (!$status["success"]) {
+        redirectWith($musicPath, [
+            "err" => $status["err"] ?? "Failed to update music"
+        ]);
+    }
+    return true;
 }
 
 /* Routing actions */

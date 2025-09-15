@@ -12,8 +12,6 @@ $assignments = $music->getAllAssignedMusics()["data"] ?? [];
 $music_list = $music -> getAllMusic()["data"] ?? [];
 $editMusicId = $_GET['edit_music'] ?? null;
 $editSingerId = $_GET['edit_singer'] ?? null;
-
-$isEditing = $editMusicId && $editSingerId;
 ?>
 
 <!DOCTYPE html>
