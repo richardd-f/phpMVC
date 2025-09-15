@@ -177,7 +177,16 @@ class Music {
         }
     }
 
-
+    // Update assigned singer
+    public function updateSinger($music_id, $old_singer_id, $new_singer_id) {
+        try {
+            $stmt = $this->conn->prepare("UPDATE music_singer SET singer_id=? WHERE music_id=? AND singer_id=?");
+            $stmt->execute([$new_singer_id, $music_id, $old_singer_id]);
+            return ["success" => true];
+        } catch (Exception $e) {
+            return ["success" => false, "error" => $e->getMessage()];
+        }
+    }
 
     // Delete Music
     public function deleteMusic($music_id) {
