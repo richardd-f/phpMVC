@@ -33,7 +33,7 @@ if(isset($_GET["err"])){
         </a>
         <a href="/view/page/assignMusicSinger.php" 
            class="px-3 sm:px-4 py-2 rounded-lg text-white text-md sm:text-base font-medium hover:bg-blue-500 hover:shadow-md transition">
-          Creator
+          Assignment
         </a>
       </div>
     </div>

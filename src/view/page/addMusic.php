@@ -68,7 +68,7 @@
                                             </svg>
                                         </a>
                                         <!-- Delete Button -->
-                                        <a href="../../controller/musicController.php?action=delete&musicId=<?php echo $music['music_id']; ?>" 
+                                        <a href="../../controller/Music.php?action=delete&musicId=<?php echo $music['music_id']; ?>" 
                                         onclick="return confirm('Are you sure you want to delete this music?');"
                                         class="inline-flex items-center justify-center bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">

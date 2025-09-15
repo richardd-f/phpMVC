@@ -56,7 +56,7 @@ $isEditing = $editMusicId && $editSingerId;
                                         </svg>
                                     </a>
                                     <!-- Delete Button -->
-                                    <form action="/controller/MusicSinger.php?action=unassign" method="POST" style="display:inline;">
+                                    <form action="/controller/MusicSinger.php?action=unassign&music=<?= $assignment["music_id"]?>" method="POST" style="display:inline;">
                                         <input type="hidden" name="music" value="<?php echo $assignment['music_id']; ?>">
                                         <button type="submit" onclick="return confirm('Are you sure you want to unassign the singer?')"
                                             class="bg-red-500 p-2 rounded-md hover:bg-red-600 flex items-center justify-center text-white">
