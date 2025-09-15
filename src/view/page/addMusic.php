@@ -96,7 +96,7 @@
         <?php echo $editMode ? "Edit Music" : "Add New Music"; ?>
     </h2>
 
-    <form action="../../controller/musicController.php" method="POST" class="space-y-4">
+    <form action="../../controller/Music.php" method="POST" class="space-y-4">
         <?php if ($editMode): ?>
             <input type="hidden" name="music_id" value="<?php echo htmlspecialchars($musicToEdit['music_id']); ?>">
         <?php endif; ?>
