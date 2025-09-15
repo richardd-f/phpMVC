@@ -14,6 +14,7 @@ class Music {
             try {
             $sql = "INSERT INTO Music (title, duration, publishDate) VALUES (:title, :duration, :publishDate)";
             $stmt = $this->conn->prepare($sql);
+
             $stmt->execute([
                 ':title' => $title,
                 ':duration' => $duration,

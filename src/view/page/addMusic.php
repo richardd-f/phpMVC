@@ -22,7 +22,6 @@
             $editMode = true;
         }
     }
-
 ?>
 
 <!DOCTYPE html>
